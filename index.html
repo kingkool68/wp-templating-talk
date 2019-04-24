@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>From Template Tags to Twig: A Journey Through WordPress Templating</title>
+
+        <meta name="description" content="">
+        <meta name="author" content="Russell Heimlich">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="reveal.js/css/reveal.css">
+        <link rel="stylesheet" href="reveal.js/css/theme/sky.css" id="theme">
+        <link rel="stylesheet" href="css/overrides.css">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="css/mono-blue.css">
+
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="reveal.js/lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <section>
+                    <h2>From Template Tags to Twig</h2>
+                    <p>A Journey Through WordPress Templating</p>
+                </section>
+                <section>
+                    <h2>Follow Along</h2>
+                    <a href="#">v.gd</a>
+                </section>
+                <section
+                    data-background-color="#ffffff"
+                    data-background-image="img/russell-on-pogo-stick.jpg"
+                    data-background-size="contain"
+                    data-transition="fade"
+                >
+                    <p style="padding-top: 85vh;">
+                        <span style="background-color: rgba(255, 255, 255, 0.55); display: block; padding-bottom: 80px;">Russell Heimlich<br>(like the maneuver)</span>
+                    </p>
+                </section>
+                <section>
+                    <p>Senior Developer at nclud</p>
+                    <a href="https://nclud.com">
+                        <img src="img/nclud-logo.svg" style="max-width: 540px;" class="no-border">
+                    </a>
+                </section>
+                <section>
+                    <img src="img/kubrick-wordpress-theme.png">
+                </section>
+                <section>
+                    <a href="http://www.russellheimlich.com/blog/the-first-one/index.html">
+                        <img src="img/russell-heimlichs-first-blog-post.jpg">
+                    </a>
+                </section>
+                <section>
+                    <h1>Template Tags</h1>
+                </section>
+                <section>
+                    <pre><code>&lt;h2&gt;
+    &lt;a href="&lt;?php the_permalink() ?&gt;" rel="bookmark"&gt;
+        &lt;?php the_title(); ?&gt;
+    &lt;/a&gt;
+&lt;/h2&gt;
+&lt;small&gt;
+    &lt;?php the_time(__('F jS, Y', 'kubrick')) ?&gt;
+&lt;/small&gt;
+&lt;div class="entry"&gt;
+    &lt;?php the_content(); ?&gt;
+&lt;/div&gt;
+</code></pre>
+                </section>
+                <section>
+                    <p><code>the_title()</code> prints the title</p>
+                    <p class="fragment"><code>get_the_title()</code> returns the value of the title</p>
+                </section>
+                <section>
+                    <pre><code class="html">&lt;header class=&quot;entry-header&quot;&gt;
+    &lt;?php
+        if ( 'post' === get_post_type() ) :
+            echo '&lt;div class=&quot;entry-meta&quot;&gt;';
+                if ( is_single() ) :
+                    twentyseventeen_posted_on();
+                else :
+                    echo twentyseventeen_time_link();
+                    twentyseventeen_edit_link();
+                endif;
+            echo '&lt;/div&gt;&lt;!-- .entry-meta --&gt;';
+        endif;
+        if ( is_single() ) {
+            the_title( '&lt;h1 class=&quot;entry-title&quot;&gt;', '&lt;/h1&gt;' );
+        } else {
+            the_title( '&lt;h2 class=&quot;entry-title&quot;&gt;&lt;a href=&quot;' . esc_url( get_permalink() ) . '&quot; rel=&quot;bookmark&quot;&gt;', '&lt;/a&gt;&lt;/h2&gt;' );
+        }
+    ?&gt;
+&lt;/header&gt;&lt;!-- .entry-header --&gt;
+</code></pre>
+				</section>
+				<section>
+					<h3>Yuck!</h3>
+					<img src="img/baby-reading-book.gif">
+				</section>
+                <section>
+                    <h1>Twig</h1>
+                </section>
+                <section>
+                    <h2>What is Twig?</h2>
+                    <ul>
+						<li class="fragment">A modern template engine for PHP</li>
+						<li class="fragment">Different syntax that compiles down to PHP</li>
+                        <li class="fragment">Separates rendering markup from data processing</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Basic Example</h3>
+                    <pre><code>&lt;?php echo $hello_world; ?></code></pre>
+                    <pre class="fragment"><code>{{ hello_world }}</code></pre>
+                </section>
+                <section>
+                    <h3>Twig Syntax</h3>
+                    <ul>
+                        <li class="fragment">
+                            Print variables or expressions
+                            <pre><code>{{ ... }}</code></pre>
+                        </li>
+                        <li class="fragment">
+                            Comments (don't get rendered)
+                            <pre><code>{# ... #}</code></pre>
+                        </li>
+                        <li class="fragment">
+                            Evaluate control statements (<code>if</code>, <code>for</code>, <code>while</code>)
+                            <pre><code>{% ... %}</code></pre>
+                        </li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Another Example</h3>
+                    <pre><code>&lt;?php foreach ( $things as $thing ) { ?>
+  <div class="thing">
+    <h1>&lt;?php echo $thing; ?></h1>
+  </div>
+&lt;?php } ?>
+</code></pre>
+                    <pre class="fragment"><code>{% for thing in things %}
+  <div class="thing">
+    <h1>{{ thing }}</h1>
+  </div>
+{% endfor %}
+</code></pre>
+                </section>
+                <section>
+                    <h3>Filters</h3>
+                    <pre><code>
+{{ 'fab'|upper }}
+</code></pre>
+                    <pre class="fragment"><code>    FAB</code></pre>
+                </section>
+                <section>
+                    <h3>Passing Data to Templates</h3>
+                    <pre><code>&lt;?php
+$context = array(
+    'foo' => 'bar',
+    'baz' => 'bat',
+    'url' => get_permalink(),
+);
+echo $twig->render( 'template.twig', $context );
+</code></pre>
+                </section>
+                <section data-background-video="img/thumbs-down.mp4" data-background-video-loop="loop" data-background-size="contain"></section>
+                <section>
+                    <p>Why not just use PHP short tags?</p>
+                    <pre><code>&lt;?= $foo ?></code></pre>
+                    <small class="fragment" style="color: red;">(Don't do this)</small>
+                </section>
+                <section>
+                    <p>Why so much reinventing of PHP?</p>
+                    <pre><code>{% set currentPageNum = paginationCurrentPageNumber %}
+{% set totalItems     = paginationTotalItems %}
+{% set itemsPerPage   = paginationResultsPerPage %}
+{% set pageCount      = (totalItems / itemsPerPage)|round(0, 'ceil') %}
+{% set pageRange      = 5 %}
+
+{% if pageCount &lt; currentPageNum %}
+    {% set currentPageNum = pageCount %}
+{% endif %}
+
+{% if pageRange &gt; pageCount %}
+    {% set pageRange = pageCount %}
+{% endif %}
+
+{% set delta = (pageRange / 2)|round(0, 'ceil') %}
+
+{% if (currentPageNum - delta) > (pageCount - pageRange) %}
+
+    {% set pages = range((pageCount - pageRange + 1), pageCount) %}
+
+{% else %}
+
+    {% if (currentPageNum - delta) < 0 %}
+
+        {% set delta = currentPageNum %}
+    {% endif %}
+
+    {% set offset = currentPageNum - delta %}
+    {% set pages  = range(offset + 1, offset + pageRange) %}
+{% endif %}
+</code></pre>
+                </section>
+                <section>
+                    <h3>Secret PHP?</h3>
+                    <pre><code>
+{% if item.get_excerpt %}
+<div class="description">
+    {{ item.get_the_excerpt }}
+</div>
+{% endif %}
+</code></pre>
+
+                    <pre class="fragment"><code>
+{% if item.get_excerpt() %}
+<div class="description">
+    {{ item.get_the_excerpt() }}
+</div>
+{% endif %}
+</code></pre>
+                </section>
+                <section>
+                    <h3>Include Hell</h3>
+                    <pre><code>partials/search-tools.twig
+partials/stream/stream-home.twig
+    partials/stream/featured-posts.twig
+        partials/stream/standard/featured.twig
+            partials/stream/item-img.twig
+            partials/overview/overline.twig
+            partials/item-title.twig
+            partials/meta-info/meta-info-empty.twig
+            partials/meta-info/meta-info-stream.twig
+                partials/meta-info/img-' ~ item.get_type ~ '.twig
+                partials/meta-info/img.twig
+                partials/meta-info/stack.twig
+                    partials/meta-info/source-name-' ~ item.get_type ~ '.twig
+                    partials/meta-info/source-name.twig
+                    partials/meta-info/timestamp-' ~ item.get_type ~ '.twig
+                    partials/meta-info/timestamp.twig
+                partials/meta-info/source-name-' ~ item.get_type ~ '.twig
+                partials/meta-info/source-name.twig
+</code></pre>
+                </section>
+                <section>
+                    <h3>What is going on?!?</h3>
+                    <img src="img/whats-going-on.gif" class="stretch">
+                </section>
+                <section>
+                    <h2>Turns out I didn't hate Twig&hellip;</h2>
+                    <p class="fragment">I just hated the way it was being used</p>
+                </section>
+                <section>
+                    <a href="https://carlalexander.ca/designing-class-generate-wordpress-html-content/
+                    ">
+                        <img src="img/screenshot-of-designing-a-class-to-generate-html-content-in-wordpress.jpg">
+                    </a>
+                </section>
+                <section>
+                    <h3>Tips for Template Sanity</h3>
+                    <ul>
+                        <li class="fragment">Let PHP process data, let templates render markup</li>
+                        <li class="fragment">Keep templates in separate files</li>
+                        <li class="fragment">Only pass the data needed by the template</li>
+                        <li class="fragment">Avoid <code>{% include  %}</code></li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>🤔</h3>
+                    <p>So how can we use Twig with WordPress?</p>
+                </section>
+                <section>
+                    <a href="https://www.upstatement.com/timber/">
+                        <img src="img/timber-logo.svg" class="no-border">
+                    </a>
+                    <p class="fragment">Timber unites Twig and WordPress</p>
+                </section>
+                <section>
+                    <a href="https://css-tricks.com/timber-and-twig-reignited-my-love-for-wordpress/">
+                        <img src="img/screenshot-of-timber-css-tricks-article.jpg">
+                    </a>
+                </section>
+                <section>
+                    <a href="https://code.tutsplus.com/articles/kick-start-wordpress-development-with-twig-introduction--cms-24781">
+                        <img src="img/screenshot-ofenvato-timber-article.jpg">
+                    </a>
+                </section>
+                <section>
+                    <code>single.php</code>
+                    <pre><code>$context = Timber::get_context();
+$context['foo'] = 'Bar!';
+$context['post'] = Timber::query_post();
+Timber::render( 'single.twig', $context );
+</code></pre>
+                    <div class="fragment">
+                        <code>single.twig</code>
+                        <pre><code>
+{% extends "base.twig" %}
+{% block content %}
+    <h1 class="big-title">{{foo}}</h1>
+    <h2>{{post.title}}</h2>
+    <img src="{{post.thumbnail.src}}" />
+    <div class="body"> {{post.content}} </div>
+{% endblock %}
+</code></pre>
+                    </div>
+                </section>
+                <section>
+                    <h3>What is <code>post</code>?</h3>
+                    <pre class="fragment"><code>var_dump( context['post'] );</code></pre>
+                    <pre class="fragment"><code>{{ dump( post ) }}</code></pre>
+                </section>
+                <section>
+                    <pre><code>object(Timber\Post)[1081]
+public 'ImageClass' => string 'Timber\Image' (length=12)
+public 'PostClass' => string 'Timber\Post' (length=11)
+public 'TermClass' => string 'Timber\Term' (length=11)
+public 'object_type' => string 'post' (length=4)
+public 'custom' =>
+    array (size=1)
+    '_edit_lock' => string '1555209065:1' (length=12)
+protected '_content' => string '
+<p>Hello world!</p>
+' (length=21)
+protected '_permalink' => null
+protected '_next' =>
+    array (size=0)
+    empty
+protected '_prev' =>
+    array (size=0)
+    empty
+protected '_css_class' => null
+public 'id' => int 1795
+public 'ID' => int 1795
+public 'post_author' => string '1' (length=1)
+public 'post_content' => string '<!-- wp:paragraph -->
+<p>Hello world!</p>
+<!-- /wp:paragraph -->' (length=64)
+public 'post_date' => string '2019-04-13 22:31:26' (length=19)
+public 'post_excerpt' => string '' (length=0)
+public 'post_parent' => int 0
+public 'post_status' => string 'publish' (length=7)
+public 'post_title' => string 'Test Page' (length=9)
+public 'post_type' => string 'page' (length=4)
+public 'slug' => string 'test-page' (length=9)
+protected '__type' => null
+public '_edit_lock' => string '1555209065:1' (length=12)
+public 'post_date_gmt' => string '2019-04-14 02:31:26' (length=19)
+public 'comment_status' => string 'closed' (length=6)
+public 'ping_status' => string 'closed' (length=6)
+public 'post_password' => string '' (length=0)
+public 'post_name' => string 'test-page' (length=9)
+public 'to_ping' => string '' (length=0)
+public 'pinged' => string '' (length=0)
+public 'post_modified' => string '2019-04-13 22:31:26' (length=19)
+public 'post_modified_gmt' => string '2019-04-14 02:31:26' (length=19)
+public 'post_content_filtered' => string '' (length=0)
+public 'guid' => string 'https://wp.local/?page_id=1795' (length=30)
+public 'menu_order' => int 0
+public 'post_mime_type' => string '' (length=0)
+public 'comment_count' => string '0' (length=1)
+public 'filter' => string 'raw' (length=3)
+public 'status' => string 'publish' (length=7)
+</code></pre>
+                </section>
+                <section>
+                    <h3>Secret PHP Again!</h3>
+                    <pre class="fragment"><code>{{ post.content }}</code></pre>
+
+                    <div class="fragment">
+                        <p>Is really</p>
+                        <pre><code>{{ post.content() }}</code></pre>
+                    </div>
+                </section>
+                <section>
+                    <p>You can still use Timber to pass arbitrary data to Twig templates</p>
+                </section>
+                <section>
+                    <h1>Sprig</h1>
+                    <p>Bare bones Twig templating support for WordPress</p>
+                </section>
+                <section>
+                    <a href="https://github.com/kingkool68/sprig">
+                        <img src="img/sprig-github-repo.jpg">
+                    </a>
+                </section>
+                <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>PHP files</th>
+                                <th>Lines of Code</th>
+                            </tr>
+                        </thead>
+                        <tobdy>
+                            <tr class="fragment">
+                                <td>
+                                    <a href="http://line-count.herokuapp.com/kingkool68/sprig">Sprig</a>
+                                </td>
+                                <td class="right-align">2</td>
+                                <td class="right-align">214</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>
+                                    <a href="http://line-count.herokuapp.com/timber/timber">Timber</a>
+                                </td>
+                                <td class="right-align">132</td>
+                                <td class="right-align">18,313</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <h1>Using Sprig</h1>
+                </section>
+                <section>
+                    <p>
+                        <code>Sprig::render()</code> will return a string of a compiled template
+                    </p>
+                    <pre><code>$context = array(
+  'title' => 'Sprig is awesome!',
+  'url'   => 'https://github.com/kingkool68/sprig/',
+);
+
+// Render the template and return a string
+$thing = Sprig::render( 'example.twig', $context );
+</code></pre>
+                </section>
+                <section>
+                    <p>
+                        <code>Sprig::out()</code> will echo a compiled template
+                    </p>
+                    <pre><code>$context = array(
+  'title' => 'Sprig is awesome!',
+  'url'   => 'https://github.com/kingkool68/sprig/',
+);
+
+// Echo out the rendered template
+Sprig::out( 'example.twig', $context );
+</code></pre>
+                </section>
+                <section>
+                    <p>
+                        <code>Sprig::do_action()</code> will capture the output of a WordPress action and return a string
+                    </p>
+                    <pre><code>$context = array(
+  'scripts' => Sprig::do_action( 'wp_print_scripts' ),
+);
+
+// Echo out the rendered template
+Sprig::out( 'example.twig', $context );
+</code></pre>
+                </section>
+                <section>
+                    <h3>Available Twig Filters</h3>
+                    <ul>
+                        <li><a href="https://developer.wordpress.org/reference/functions/esc_attr/"><code>esc_attr</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/esc_html/"><code>esc_html</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/esc_url/"><code>esc_url</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/esc_js/"><code>esc_js</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/esc_textarea/"><code>esc_textarea</code></a></li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>More Twig Filters</h3>
+                    <ul>
+                        <li><a href="https://developer.wordpress.org/reference/functions/tag_escape/"><code>tag_escape</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/sanitize_email/"><code>sanitize_email</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/sanitize_html_class/"><code>sanitize_html_class</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/antispambot/"><code>antispambot</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/wptexturize/"><code>wptexturize</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/absint/"><code>absint</code></a></li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Add Your Own Twig Filters</h3>
+                    <pre><code>function filter_sprig_twig_filters( $filters = array() ) {
+    $filters['sanitize_title'] = 'sanitize_title';
+    return $filters;
+}
+add_filter( 'sprig/twig/filters', 'filter_sprig_twig_filters' );
+</code></pre>
+                </section>
+                <section>
+                    <h3>Sprig Filters Example</h3>
+                    <pre><code>&lt;input
+    type="text"
+    name="chart-options[yaxis_label]"
+    id="chart-options-yaxis-label"
+    value="{{ yaxis_label|esc_attr }}"
+&gt;
+
+&lt;a href="{{ link_url|esc_url }}"&gt;{{ link_text }}&lt;/a&gt;
+</code></pre>
+                </section>
+                <section>
+                    <h3>Available Twig Functions</h3>
+                    <ul>
+                        <li><a href="https://developer.wordpress.org/reference/functions/checked/"><code>checked()</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/selected/"><code>selected()</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/disabled/"><code>disabled()</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/wp_head/"><code>wp_head()</code></a></li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>More Twig Functions</h3>
+                    <ul>
+                        <li><a href="https://developer.wordpress.org/reference/functions/wp_footer/"><code>wp_footer()</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/body_class/"><code>body_class()</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/get_header/"><code>get_header()</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/get_footer/"><code>get_footer()</code></a></li>
+                        <li><a href="https://developer.wordpress.org/reference/functions/wp_title/"><code>wp_title()</code></a></li>
+                    </ul>
+                </section>
+                <section>
+                        <h3>Add Your Own Twig Functions</h3>
+                        <pre><code>function filter_sprig_twig_functions( $functions = array() ) {
+    $functions['wp_nonce_field'] = 'wp_nonce_field';
+    return $functions;
+}
+add_filter( 'sprig/twig/functions', 'filter_sprig_twig_functions' );
+</code></pre>
+                </section>
+                <section>
+                    <h3>Sprig Functions Example</h3>
+                    <pre><code>&lt;select name="chart-options[zoomtype]" id="chart-options-zoomtype"&gt;
+    &lt;option value="x" {{ selected( 'x', zoomtype ) }}&gt;x-Axis Only&lt;/option&gt;
+    &lt;option value="y" {{ selected( 'y', zoomtype ) }}&gt;y-Axis Only&lt;/option&gt;
+    &lt;option value="xy" {{ selected( 'xy', zoomtype ) }}&gt;x &amp; y-Axis&lt;/option&gt;
+    &lt;option value="none" {{ selected( 'none', zoomtype ) }}&gt;None&ly;/option&gt;
+&lt;/select&gt;
+</code></pre>
+                </section>
+                <section>
+                    <h2>How do I use Sprig in my own themes?</h2>
+                </section>
+
+
+                <section>
+                    <h2>Takeaways</h2>
+                </section>
+                <section>
+                    <p>Separate data processing from rendering the output</p>
+                </section>
+                <section>
+                    <p>Use separate files for each template</p>
+                </section>
+                <section>
+                    <p>Only pass the data needed to render the template</p>
+                </section>
+                <section>
+                    <p>Don't constrain templates to their data sources</p>
+                </section>
+                <section>Think in components not pages</section>
+                <section>
+                    <h1>Thank You!</h1>
+                    <p class="tweet-me"><a href="https://twitter.com/kingkool68"><img src="img/twitter-logo.svg" class="no-border" alt="Tweet me!"> @kingkool68</a></p>
+                    <h2 class="fragment">Questions?</h2>
+                </section>
+            </div>
+
+        </div>
+
+        <script src="reveal.js/lib/js/head.min.js"></script>
+        <script src="reveal.js/js/reveal.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme || 'sky', // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'reveal.js/plugin/embed-tweet/embed-tweet.js' },
+                    { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>
