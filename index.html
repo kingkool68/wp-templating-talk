@@ -42,7 +42,7 @@
                     <p>A Journey Through WordPress Templating</p>
                 </section>
                 <section>
-                    <h2>Follow Along</h2>
+                    <h2>🤓<br> Follow Along</h2>
                     <a href="https://v.gd/wptemplating">v.gd/wptemplating</a>
                 </section>
                 <section
@@ -111,26 +111,21 @@
     ?&gt;
 &lt;/header&gt;&lt;!-- .entry-header --&gt;
 </code></pre>
-				</section>
-				<section>
-					<h3>Yuck!</h3>
-					<img src="img/baby-reading-book.gif">
-				</section>
+                </section>
+                <section>
+                    <h3>Yuck!</h3>
+                    <img src="img/baby-reading-book.gif">
+                </section>
                 <section>
                     <h1>Twig</h1>
                 </section>
                 <section>
                     <h2>What is Twig?</h2>
                     <ul>
-						<li class="fragment">A modern template engine for PHP</li>
-						<li class="fragment">Different syntax that compiles down to PHP</li>
+                        <li class="fragment">A modern template engine for PHP</li>
+                        <li class="fragment">Different syntax that compiles down to PHP</li>
                         <li class="fragment">Separates rendering markup from data processing</li>
                     </ul>
-                </section>
-                <section>
-                    <h3>Basic Example</h3>
-                    <pre><code>&lt;?php echo $hello_world; ?></code></pre>
-                    <pre class="fragment"><code>{{ hello_world }}</code></pre>
                 </section>
                 <section>
                     <h3>Twig Syntax</h3>
@@ -140,29 +135,40 @@
                             <pre><code>{{ ... }}</code></pre>
                         </li>
                         <li class="fragment">
-                            Comments (don't get rendered)
-                            <pre><code>{# ... #}</code></pre>
-                        </li>
-                        <li class="fragment">
                             Evaluate control statements (<code>if</code>, <code>for</code>, <code>while</code>)
                             <pre><code>{% ... %}</code></pre>
+                        </li>
+                        <li class="fragment">
+                            Comments (don't get rendered)
+                            <pre><code>{# ... #}</code></pre>
                         </li>
                     </ul>
                 </section>
                 <section>
-                    <h3>Another Example</h3>
-                    <pre><code>&lt;?php foreach ( $things as $thing ) { ?>
+                    <h3>An Example</h3>
+                    <pre><code>&lt;?php // Loop over some things ?>
+&lt;?php foreach ( $things as $thing ) { ?>
   <div class="thing">
     <h1>&lt;?php echo $thing; ?></h1>
   </div>
 &lt;?php } ?>
 </code></pre>
-                    <pre class="fragment"><code>{% for thing in things %}
+                    <pre class="fragment"><code>{# Loop over some things #}
+{% for thing in things %}
   <div class="thing">
     <h1>{{ thing }}</h1>
   </div>
 {% endfor %}
 </code></pre>
+                </section>
+                <section>
+                    <h3><code>extends</code></h3>
+                    <pre><code>{% extends "file.twig" %}
+
+{% block content %}
+  <h1>This is how you extend a template in Twig</h1>
+{% endblock %}
+                    </code></pre>
                 </section>
                 <section>
                     <h3>Filters</h3>
@@ -190,7 +196,7 @@ echo $twig->render( 'template.twig', $context );
                 </section>
                 <section>
                     <p>Why so much reinventing of PHP?</p>
-                    <pre><code>{% set currentPageNum = paginationCurrentPageNumber %}
+                    <pre class="stretch"><code>{% set currentPageNum = paginationCurrentPageNumber %}
 {% set totalItems     = paginationTotalItems %}
 {% set itemsPerPage   = paginationResultsPerPage %}
 {% set pageCount      = (totalItems / itemsPerPage)|round(0, 'ceil') %}
@@ -223,26 +229,8 @@ echo $twig->render( 'template.twig', $context );
 </code></pre>
                 </section>
                 <section>
-                    <h3>Secret PHP?</h3>
-                    <pre><code>
-{% if item.get_excerpt %}
-<div class="description">
-    {{ item.get_the_excerpt }}
-</div>
-{% endif %}
-</code></pre>
-
-                    <pre class="fragment"><code>
-{% if item.get_excerpt() %}
-<div class="description">
-    {{ item.get_the_excerpt() }}
-</div>
-{% endif %}
-</code></pre>
-                </section>
-                <section>
                     <h3>Include Hell</h3>
-                    <pre><code>partials/search-tools.twig
+                    <pre class="stretch"><code>partials/search-tools.twig
 partials/stream/stream-home.twig
     partials/stream/featured-posts.twig
         partials/stream/standard/featured.twig
@@ -271,21 +259,6 @@ partials/stream/stream-home.twig
                     <p class="fragment">I just hated the way it was being used</p>
                 </section>
                 <section>
-                    <a href="https://carlalexander.ca/designing-class-generate-wordpress-html-content/
-                    ">
-                        <img src="img/screenshot-of-designing-a-class-to-generate-html-content-in-wordpress.jpg">
-                    </a>
-                </section>
-                <section>
-                    <h3>Tips for Template Sanity</h3>
-                    <ul>
-                        <li class="fragment">Let PHP process data, let templates render markup</li>
-                        <li class="fragment">Keep templates in separate files</li>
-                        <li class="fragment">Only pass the data needed by the template</li>
-                        <li class="fragment">Avoid <code>{% include  %}</code></li>
-                    </ul>
-                </section>
-                <section>
                     <h3>🤔</h3>
                     <p>So how can we use Twig with WordPress?</p>
                 </section>
@@ -296,16 +269,6 @@ partials/stream/stream-home.twig
                     <p class="fragment">Timber unites Twig and WordPress</p>
                 </section>
                 <section>
-                    <a href="https://css-tricks.com/timber-and-twig-reignited-my-love-for-wordpress/">
-                        <img src="img/screenshot-of-timber-css-tricks-article.jpg">
-                    </a>
-                </section>
-                <section>
-                    <a href="https://code.tutsplus.com/articles/kick-start-wordpress-development-with-twig-introduction--cms-24781">
-                        <img src="img/screenshot-ofenvato-timber-article.jpg">
-                    </a>
-                </section>
-                <section>
                     <code>single.php</code>
                     <pre><code>$context = Timber::get_context();
 $context['foo'] = 'Bar!';
@@ -314,8 +277,8 @@ Timber::render( 'single.twig', $context );
 </code></pre>
                     <div class="fragment">
                         <code>single.twig</code>
-                        <pre><code>
-{% extends "base.twig" %}
+                        <pre><code>{% extends "base.twig" %}
+
 {% block content %}
     <h1 class="big-title">{{foo}}</h1>
     <h2>{{post.title}}</h2>
@@ -326,78 +289,12 @@ Timber::render( 'single.twig', $context );
                     </div>
                 </section>
                 <section>
-                    <h3>What is <code>post</code>?</h3>
-                    <pre class="fragment"><code>var_dump( context['post'] );</code></pre>
-                    <pre class="fragment"><code>{{ dump( post ) }}</code></pre>
+                    <h3>👎</h3>
+                    <pre><code>&lt;a href=&quot;{{ post.get_field('custom_link')|e('esc_url') }}&quot;&gt;&lt;/a&gt;</code></pre>
                 </section>
                 <section>
-                    <pre><code>object(Timber\Post)[1081]
-public 'ImageClass' => string 'Timber\Image' (length=12)
-public 'PostClass' => string 'Timber\Post' (length=11)
-public 'TermClass' => string 'Timber\Term' (length=11)
-public 'object_type' => string 'post' (length=4)
-public 'custom' =>
-    array (size=1)
-    '_edit_lock' => string '1555209065:1' (length=12)
-protected '_content' => string '
-<p>Hello world!</p>
-' (length=21)
-protected '_permalink' => null
-protected '_next' =>
-    array (size=0)
-    empty
-protected '_prev' =>
-    array (size=0)
-    empty
-protected '_css_class' => null
-public 'id' => int 1795
-public 'ID' => int 1795
-public 'post_author' => string '1' (length=1)
-public 'post_content' => string '<!-- wp:paragraph -->
-<p>Hello world!</p>
-<!-- /wp:paragraph -->' (length=64)
-public 'post_date' => string '2019-04-13 22:31:26' (length=19)
-public 'post_excerpt' => string '' (length=0)
-public 'post_parent' => int 0
-public 'post_status' => string 'publish' (length=7)
-public 'post_title' => string 'Test Page' (length=9)
-public 'post_type' => string 'page' (length=4)
-public 'slug' => string 'test-page' (length=9)
-protected '__type' => null
-public '_edit_lock' => string '1555209065:1' (length=12)
-public 'post_date_gmt' => string '2019-04-14 02:31:26' (length=19)
-public 'comment_status' => string 'closed' (length=6)
-public 'ping_status' => string 'closed' (length=6)
-public 'post_password' => string '' (length=0)
-public 'post_name' => string 'test-page' (length=9)
-public 'to_ping' => string '' (length=0)
-public 'pinged' => string '' (length=0)
-public 'post_modified' => string '2019-04-13 22:31:26' (length=19)
-public 'post_modified_gmt' => string '2019-04-14 02:31:26' (length=19)
-public 'post_content_filtered' => string '' (length=0)
-public 'guid' => string 'https://wp.local/?page_id=1795' (length=30)
-public 'menu_order' => int 0
-public 'post_mime_type' => string '' (length=0)
-public 'comment_count' => string '0' (length=1)
-public 'filter' => string 'raw' (length=3)
-public 'status' => string 'publish' (length=7)
-</code></pre>
-                </section>
-                <section>
-                    <h3>Secret PHP Again!</h3>
-                    <pre class="fragment"><code>{{ post.content }}</code></pre>
-
-                    <div class="fragment">
-                        <p>Is really</p>
-                        <pre><code>{{ post.content() }}</code></pre>
-                    </div>
-                </section>
-                <section>
-                    <p>You can still use Timber to pass arbitrary data to Twig templates</p>
-                </section>
-                <section>
-                    <h1>Sprig</h1>
-                    <p>Bare bones Twig templating support for WordPress</p>
+                    <h1>🌱 Sprig</h1>
+                    <p class="fragment">Bare bones Twig templating support for WordPress</p>
                 </section>
                 <section>
                     <a href="https://github.com/kingkool68/sprig">
@@ -416,17 +313,17 @@ public 'status' => string 'publish' (length=7)
                         <tobdy>
                             <tr class="fragment">
                                 <td>
-                                    <a href="http://line-count.herokuapp.com/kingkool68/sprig">Sprig</a>
-                                </td>
-                                <td class="right-align">2</td>
-                                <td class="right-align">214</td>
-                            </tr>
-                            <tr class="fragment">
-                                <td>
                                     <a href="http://line-count.herokuapp.com/timber/timber">Timber</a>
                                 </td>
                                 <td class="right-align">132</td>
                                 <td class="right-align">18,313</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td>
+                                    <a href="http://line-count.herokuapp.com/kingkool68/sprig">Sprig</a>
+                                </td>
+                                <td class="right-align">2</td>
+                                <td class="right-align">214</td>
                             </tr>
                         </tbody>
                     </table>
@@ -449,9 +346,9 @@ $thing = Sprig::render( 'example.twig', $context );
                 </section>
                 <section>
                     <p>
-                        <code>Sprig::out()</code> will echo a compiled template
+                        <code class="php">Sprig::out()</code> will echo a compiled template
                     </p>
-                    <pre><code>$context = array(
+                    <pre><code class="php">$context = array(
   'title' => 'Sprig is awesome!',
   'url'   => 'https://github.com/kingkool68/sprig/',
 );
@@ -464,7 +361,7 @@ Sprig::out( 'example.twig', $context );
                     <p>
                         <code>Sprig::do_action()</code> will capture the output of a WordPress action and return a string
                     </p>
-                    <pre><code>$context = array(
+                    <pre><code class="php">$context = array(
   'scripts' => Sprig::do_action( 'wp_print_scripts' ),
 );
 
@@ -544,35 +441,287 @@ add_filter( 'sprig/twig/functions', 'filter_sprig_twig_functions' );
                 </section>
                 <section>
                     <h3>Sprig Functions Example</h3>
-                    <pre><code>&lt;select name="chart-options[zoomtype]" id="chart-options-zoomtype"&gt;
+                    <pre><code>&lt;select name="chart-options[zoomtype]"&gt;
     &lt;option value="x" {{ selected( 'x', zoomtype ) }}&gt;x-Axis Only&lt;/option&gt;
     &lt;option value="y" {{ selected( 'y', zoomtype ) }}&gt;y-Axis Only&lt;/option&gt;
     &lt;option value="xy" {{ selected( 'xy', zoomtype ) }}&gt;x &amp; y-Axis&lt;/option&gt;
     &lt;option value="none" {{ selected( 'none', zoomtype ) }}&gt;None&ly;/option&gt;
 &lt;/select&gt;
 </code></pre>
+                    <pre class="fragment"><code>&lt;select name="chart-options[zoomtype]"&gt;
+    &lt;option value="x" selected="selected"&gt;x-Axis Only&lt;/option&gt;
+    &lt;option value="y"&gt;y-Axis Only&lt;/option&gt;
+    &lt;option value="xy"&gt;x &amp; y-Axis&lt;/option&gt;
+    &lt;option value="none"&gt;None&ly;/option&gt;
+&lt;/select&gt;
+</code></pre>
                 </section>
                 <section>
-                    <h2>How do I use Sprig in my own themes?</h2>
+                    <h2>Think components<br>not pages</h2>
+                    <img src="img/building-blocks.gif" class="stretch">
+                </section>
+                <section>
+                    <p>Data for a component can come from different sources</p>
+                </section>
+                <section>
+                        <a href="https://billypenn.com/">
+                            <img src="img/screenshot-of-billy-penn-stream-items.jpg">
+                        </a>
+                    </section>
+                    <section>
+                        <img src="img/screenshot-of-sponsored-stream-item.jpg">
+                    </section>
+                <section>
+                        <blockquote>
+                                &ldquo;You must be shapeless, formless, like water. When you pour water in a cup, it becomes the cup. When you pour water in a bottle, it becomes the bottle. When you pour water in a teapot, it becomes the teapot. Water can drip and it can crash. Become like water my friend.&rdquo;
+                        </blockquote>
+                        <cite class="fragment">
+                            <a href="https://www.goodreads.com/quotes/163198-you-must-be-shapeless-formless-like-water-when-you-pour">
+                                &mdash;Bruce Lee
+                            </a>
+                        </cite>
+                </section>
+                <section>
+                    <p>Don't tie your components to the data</p>
+                    <img src="img/tom-and-jerry-tied-up-dog.gif">
                 </section>
 
+                <section data-background-color="#fff" data-transition="fade">
+                    <img src="img/typical-folder-structure-of-wordpress-themes.jpg" class="no-border">
+                </section>
 
-                <section>
-                    <h2>Takeaways</h2>
+                <section data-background-color="#fff" data-transition="fade">
+                    <img src="img/the-functions-folder-of-my-theme.jpg" class="no-border">
                 </section>
                 <section>
-                    <p>Separate data processing from rendering the output</p>
+                    <pre class="stretch"><code class="php">&lt;?php
+/**
+ * Handle everything for Archive Items
+ */
+class RH_Archive_Items {
+
+    /**
+     * Get an instance of this class
+     */
+    public static function get_instance() {
+        static $instance = null;
+        if ( null === $instance ) {
+            $instance = new static();
+            $instance-&gt;setup_actions();
+        }
+        return $instance;
+    }
+
+    /**
+     * Hook into WordPress via actions
+     */
+    public function setup_actions() { ... }
+
+}
+
+RH_Archive_Items::get_instance();
+</code></pre>
                 </section>
                 <section>
-                    <p>Use separate files for each template</p>
+                    <pre class="stretch"><code class="php">/**
+ * Render an individual archive item
+ *
+ * @param  array  $args Values to pass to the template to render
+ * @return string       HTML of rendered archive item
+ */
+public static function render_item( $args = array() ) {
+    $defaults           = array(
+        'url'          => '',
+        'title'        => '',
+        'excerpt'      => '',
+        'date'         => '',
+        'display_date' => '',
+        'machine_date' => '',
+    );
+    $context            = wp_parse_args( $args, $defaults );
+    $context['title']   = apply_filters( 'the_title', $context['title'] );
+    $context['excerpt'] = apply_filters( 'the_content', $context['excerpt'] );
+
+    // More logic for handling data
+
+    return Sprig::render( 'archive-item.twig', $context );
+}
+</code></pre>
+                </section>
+                <section data-background-color="#fff" data-transition="fade">
+                    <img src="img/archive-item-twig-file.jpg" class="no-border">
                 </section>
                 <section>
-                    <p>Only pass the data needed to render the template</p>
+                    <pre><code>&lt;article class=&quot;archive-item&quot;&gt;
+    &lt;h2&gt;
+        {% if url %}
+            &lt;a href=&quot;{{ url|esc_url }}&quot;&gt;{{ title }}&lt;/a&gt;
+        {% else %}
+            {{ title }}
+        {% endif %}
+    &lt;/h2&gt;
+
+    {% if display_date %}
+        &lt;time datetime=&quot;{{ machine_date|esc_attr }}&quot;&gt;{{ display_date }}&lt;/time&gt;
+    {% endif %}
+
+    {{ excerpt }}
+&lt;/article&gt;
+</code></pre>
                 </section>
                 <section>
-                    <p>Don't constrain templates to their data sources</p>
+                    <pre><code class="php">/**
+ * Render an archive item from post data
+ *
+ * @param  WP_Post|integer $post WP Post object or post ID to get data from
+ * @param  array           $args Values to override what gets rendered
+ * @return string          HTML of rendered archive item
+ */
+public static function render_item_from_post( $post = null, $args = array() ) {
+    $post = get_post( $post );
+    $args = array(
+        'url'     => get_permalink( $post ),
+        'title'   => get_the_title( $post ),
+        'excerpt' => get_the_excerpt( $post ),
+        'date'    => $post->post_date,
+    );
+    return static::render_item( $args );
+}
+</code></pre>
                 </section>
-                <section>Think in components not pages</section>
+                <section>
+                    <pre><code class="php">/**
+ * Render archive items from a WP_Query object
+ *
+ * @param  object $the_query A WP_Query object
+ * @return string            HTML of all archive items
+ * @throws Exception         If $the_query isn't a WP_Query object then bail
+ */
+public static function render_items_from_wp_query( $the_query = false ) {
+    global $wp_query;
+    if ( ! $the_query ) {
+        $the_query = $wp_query;
+    }
+    if ( ! $the_query instanceof WP_Query ) {
+        throw new Exception( '$the_query is not a WP_Query object!' );
+    }
+
+    $output = [];
+    while ( $the_query->have_posts() ) :
+        $post     = $the_query->the_post();
+        $output[] = static::render_item_from_post( $post );
+    endwhile;
+    wp_reset_postdata();
+    return implode( "\n", $output );
+}
+</code></pre>
+                </section>
+                <section>
+                    <pre><code class="php">&lt;?php
+$context = array(
+    'the_loop'   => RH_Archive_Items::render_item_from_wp_query(),
+    'pagination' => RH_Pagination::render_from_wp_query(),
+);
+Sprig::out( 'index.twig', $context );
+</code></pre>
+                </section>
+                <section>
+                    <h2>Living Styleguides</h2>
+                    <img src="img/its-alive.gif">
+                </section>
+                <section data-background-color="#fff">
+                    <img src="img/archive-items-styleguide.jpg" class="stretch no-border">
+                </section>
+                <section data-background-color="#fff">
+                    <img src="img/the-styleguide-folder-of-my-theme.jpg" class="no-border">
+                </section>
+                <section>
+                    <pre class="stretch"><code class="php">&lt;?php
+$basic = RH_Archive_Items::render_item(
+    array(
+        'title'   => 'Basic Archive Item',
+        'excerpt' => 'This is an excerpt to provide more context about what this archive items is all about.',
+        'date'    => date( 'Y-m-d' ),
+        'url'     => 'https://example.com',
+    )
+);
+
+$no_date = RH_Archive_Items::render_item(
+    array(
+        'title'   => 'No Date Archive Item',
+        'excerpt' => 'This archive item has no date associated with it.',
+        'url'     => 'https://example.com',
+    )
+);
+
+$no_url = RH_Archive_Items::render_item(
+    array(
+        'title'   => 'No URL Archive Item',
+        'excerpt' => 'You can\'t click the headlines to go somewhere else',
+        'date'    => date( 'Y-m-d' ),
+    )
+);
+
+$context = array(
+    'items' => array(
+        'Basic'   => $basic,
+        'No Date' => $no_date,
+        'No URL'  => $no_url,
+    ),
+);
+Sprig::out( 'styleguide-archive-items.twig', $context );
+</code></pre>
+                </section>
+                <section data-background-color="#FFF">
+                    <img src="img/billy-penn-stream-items-styleguide.jpg" class="no-border stretch">
+                </section>
+                <section data-background-color="#FFF">
+                    <img src="img/billy-penn-stream-items-styleguide-2.jpg" class="no-border stretch">
+                </section>
+                <section>
+                    <h2>📖 <br> Resources <br> &amp; <br> Further Reading</h2>
+                </section>
+                <section>
+                    <a href="https://carlalexander.ca/designing-class-generate-wordpress-html-content/">
+                        <img src="img/screenshot-of-designing-a-class-to-generate-html-content-in-wordpress.jpg">
+                    </a>
+                </section>
+                <section>
+                    <a href="https://css-tricks.com/timber-and-twig-reignited-my-love-for-wordpress/">
+                        <img src="img/screenshot-of-timber-css-tricks-article.jpg">
+                    </a>
+                </section>
+                <section>
+                        <a href="https://code.tutsplus.com/articles/kick-start-wordpress-development-with-twig-introduction--cms-24781">
+                            <img src="img/screenshot-of-envato-timber-article.jpg">
+                        </a>
+                    </section>
+                <section>
+                    <a href="https://github.com/kingkool68/wp-styleguide">
+                        <img src="img/screenshot-of-wp-styleguide-plugin.jpg">
+                    </a>
+                </section>
+                <section>
+                    <a href="https://dummyimage.com">
+                        <img src="img/screenshot-of-dummyimage-com.jpg">
+                    </a>
+                </section>
+                <section>
+                    <h2>🥡 Takeaways</h2>
+                </section>
+                <section>
+                    <p>🔀 <br> Separate data processing from rendering the output</p>
+                </section>
+                <section>
+                    <p>📄 <br> Use separate files for each template</p>
+                </section>
+                <section>
+                    <p>🎟 <br> Only pass the data needed to render the template</p>
+                </section>
+                <section>
+                    <p>🧶 <br> Don't constrain templates to their data sources</p>
+                </section>
+                <section>🧩 <br> Think in components not pages</section>
                 <section>
                     <h1>Thank You!</h1>
                     <p class="tweet-me"><a href="https://twitter.com/kingkool68"><img src="img/twitter-logo.svg" class="no-border" alt="Tweet me!"> @kingkool68</a></p>
